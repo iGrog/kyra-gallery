@@ -13,7 +13,8 @@
 
     $form = ActiveForm::begin(); ?>
 
-<?php if (!$model->isNewRecord) echo $form->field($model, 'GalleryID')->hiddenInput(); ?>
+<?php if (!$model->isNewRecord) echo $form->field($model, 'GalleryID')->hiddenInput()->label(false); ?>
+<?=$form->field($model, 'ParentID')->hiddenInput()->label(false); ?>
 <?= $form->field($model, 'GalleryName') ?>
 <?= $form->field($model, 'UrlKey') ?>
 <?= $form->field($model, 'GalleryDescription')->textarea(['rows' => 6]) ?>

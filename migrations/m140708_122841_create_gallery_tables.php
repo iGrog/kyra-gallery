@@ -11,6 +11,7 @@ class m140708_122841_create_gallery_tables extends Migration
     {
         $this->createTable('gallery', [
             'GalleryID' => 'pk',
+            'ParentID' => Schema::TYPE_INTEGER.' NULL',
             'UrlKey' => Schema::TYPE_STRING.'(255) NOT NULL',
             'GalleryName' => Schema::TYPE_STRING.'(255) NOT NULL',
             'GalleryDescription' => Schema::TYPE_TEXT,
