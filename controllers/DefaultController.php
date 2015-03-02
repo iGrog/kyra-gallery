@@ -196,34 +196,15 @@
 
         public function actionRemoveImage()
         {
-            $gh = new GalleryHelper;
-            $ret = $gh->RemoveImage($_POST['ObjectID'], $_POST['IID'], new GalleryImages, 'GalleryID', 'IID');
+            $gi = new GalleryImages();
+
+            $imgModule = Yii::$app->getModule($this->module->imageModuleName);
+            $uploadParams = $imgModule->uploadParams[$this->module->uploadPathKey];
+            $uploadParams = array_merge($uploadParams, $_POST['params']);
+
+            $ret = $gi->RemoveImage($_POST['ObjectID'], $_POST['IID'], $uploadParams);
 
             // Remove Gallery headers
-
-            $gHeaders = Gallery::find()->where(['HeaderIID' => $_POST['IID']])->asArray()->all();
-            foreach($gHeaders as $gH)
-            {
-                $newIID = GalleryImages::find()->limit(1)->orderBy('SortOrder')->where(['GalleryID' => $gH['GalleryID']])->select('IID')->asArray()->one();
-                if(empty($newIID)) $newIID = null;
-                else $newIID = $newIID['IID'];
-
-                $gh->SetMainImage($gH['GalleryID'], $newIID, Gallery::className(), 'HeaderIID');
-            }
-
-            if ($ret !== false)
-            {
-                $imgModule = Yii::$app->getModule($this->module->imageModuleName);
-                $uploadParams = $imgModule->uploadParams[$this->module->uploadPathKey];
-
-                $paths = Image::GetImageAllPaths($uploadParams, $ret);
-                foreach ($paths as $key => $data)
-                {
-                    // в 'ABS' - абсолютный дисковый путь до конкретного файла
-                    if (is_file($data['ABS'])) unlink($data['ABS']);
-                }
-                $ret = true;
-            }
             Yii::$app->response->format = Response::FORMAT_JSON;
             return $ret;
         }
