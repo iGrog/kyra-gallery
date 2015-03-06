@@ -2,10 +2,11 @@
 
 namespace kyra\gallery\models;
 
+use kyra\image\models\BasePathGenerator;
 use Yii;
 use yii\base\Exception;
 
-class GalleryPathGenerator
+class GalleryPathGenerator extends BasePathGenerator
 {
     public function GeneratePaths($params)
     {
@@ -30,18 +31,5 @@ class GalleryPathGenerator
 
         return $ret;
     }
-
-    public function GenFileNameByTemplate($template, $params)
-    {
-        foreach ($params as $key => $value)
-        {
-            if (is_array($value)) continue;
-            $template = str_replace('{' . $key . '}', $value, $template);
-        }
-
-        return $template;
-    }
-
-
 
 }

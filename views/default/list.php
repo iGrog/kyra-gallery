@@ -31,14 +31,12 @@
             {
                 $view = Url::to(['/kyra.gallery/default/images', 'gid' => $data['GalleryID']]);
                 $edit = Url::to(['/kyra.gallery/default/edit', 'gid' => $data['GalleryID']]);
-                $delete = Url::to(['/kyra.gallery/default/delete', 'gid' => $data['GalleryID']]);
+                $delete = Url::to(['/kyra.gallery/default/remove-gallery', 'gid' => $data['GalleryID']]);
                 $child = Url::to(['/kyra.gallery/default/create-child', 'gid' => $data['GalleryID']]);
                 $ret = <<<RET
 <a data-pjax="0" title="View" href="$view"><span class="glyphicon glyphicon-eye-open"></span></a>
 <a data-pjax="0" title="Update" href="$edit"><span class="glyphicon glyphicon-pencil"></span></a>
 <a data-pjax="0" data-method="post" data-confirm="Are you sure you want to delete this item?" title="Delete" href="$delete"><span class="glyphicon glyphicon-trash"></span></a>
-<a data-pjax="0" title="Update" href="$child"><span class="glyphicon glyphicon-pencil"></span></a>
-
 RET;
                 return $ret;
 

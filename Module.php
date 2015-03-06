@@ -2,6 +2,9 @@
 
 namespace kyra\gallery;
 
+use kyra\common\GalleryHelper;
+use kyra\gallery\models\GalleryImages;
+use kyra\image\models\Image;
 use Yii;
 use yii\base\Exception;
 use yii\base\Module as BaseModule;
@@ -11,9 +14,11 @@ class Module extends BaseModule
     public $sizes = [];
     public $keepOriginal = true;
     public $imageModuleName = 'kyra.image';
+    public $uploadPathKey = 'gallery';
     public $adminLayout = '//admin';
     public $viewLayout = '//main';
-    public $uploadPathKey = 'gallery';
+    public $nested = false;
+    public $facebookUpload = false;
     public $accessRoles = ['admin'];
 
     public function init()

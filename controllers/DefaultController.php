@@ -8,6 +8,7 @@
     use kyra\gallery\models\Gallery;
     use kyra\gallery\models\GalleryImages;
     use kyra\image\models\Image;
+    use kyra\image\models\ImageUploadedEvent;
     use Yii;
     use yii\bootstrap\ActiveForm;
     use yii\data\ActiveDataProvider;
@@ -45,12 +46,16 @@
             ];
         }
 
-        public function OnImageUploaded($event)
+
+        public function OnImageUploaded(ImageUploadedEvent $event)
         {
+            if($event->uploadKey != 'gallery') return;
+
             $data = $event->payload;
             $gh = new GalleryHelper();
             $gh->AddImage($data['GalleryID'], $data['data']['IID'], GalleryImages::className(), 'GalleryID', 'IID');
         }
+
 
         public function actionRemoveGallery($gid)
         {
@@ -302,11 +307,32 @@
 
         public function actionAdminList()
         {
-            $flatTree = Gallery::find()->with(['headerImage'])->orderBy('ParentID, SortOrder')->asArray()->all();
-            $tree = self::ParseTree(0, $flatTree, 'GalleryID', 'ParentID');
+            if($this->module->nested)
+            {
+                $flatTree = Gallery::find()->with(['headerImage'])->orderBy('ParentID, SortOrder')->asArray()->all();
+                     $tree = self::ParseTree(0, $flatTree, 'GalleryID', 'ParentID');
 
-            $this->breadcrumbs[] = 'Все галереи';
-            $this->layout = $this->module->adminLayout;
-            return $this->render('sort-list', ['tree' => $tree]);
+                     $this->breadcrumbs[] = 'Все галереи';
+                     $this->layout = $this->module->adminLayout;
+                     return $this->render('sort-list', ['tree' => $tree]);
+            }
+            else
+            {
+                $dp = new ActiveDataProvider([
+                    'query' => Gallery::find()->with(['headerImage']),
+                    'sort' => [
+                        'defaultOrder' => [
+                            'SortOrder' => SORT_ASC,
+                        ]
+                    ],
+                    'pagination' => [
+                        'pageSize' => 20,
+                    ],
+                ]);
+
+                $this->breadcrumbs[] = 'Все галереи';
+                $this->layout = $this->module->adminLayout;
+                return $this->render('list', ['dp' => $dp]);
+            }
         }
     }

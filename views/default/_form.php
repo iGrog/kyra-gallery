@@ -18,7 +18,7 @@
 <?= $form->field($model, 'GalleryName') ?>
 <?= $form->field($model, 'UrlKey') ?>
 <?= $form->field($model, 'GalleryDescription')->textarea(['rows' => 6]) ?>
-<?= $form->field($model, 'FacebookAlbumID') ?>
+
 
 <?= Html::submitButton(Yii::t('app', 'Записать'), ['class' => 'btn btn-primary']) ?>
 
