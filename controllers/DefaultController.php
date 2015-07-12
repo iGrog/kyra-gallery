@@ -31,7 +31,9 @@
                             'allow' => true,
                             'actions' => ['delete', 'set-main', 'add-image', 'change-order', 'remove-image',
                                 'create-child',
-                                'images', 'edit', 'create', 'admin-list', 'manage-crop', 'crop-image', 'sort-gallery', 'remove-gallery'],
+                                'images', 'edit', 'create', 'admin-list', 'manage-crop', 'crop-image',
+                                'get-image-info', 'set-image-info',
+                                'sort-gallery', 'remove-gallery'],
                             'roles' => $this->module->accessRoles,
                         ],
                     ],
@@ -44,6 +46,28 @@
                 ],
 
             ];
+        }
+
+        public function actionGetImageInfo($iid)
+        {
+            $i = Image::find()->where(['IID' => $iid])->select(['IID', 'FileTitle', 'FileDesc'])->asArray()->one();
+            Yii::$app->response->format = Response::FORMAT_JSON;
+            return $i;
+        }
+
+        public function actionSetImageInfo()
+        {
+            Yii::$app->response->format = Response::FORMAT_JSON;
+
+            $iid = $_POST['IID'];
+            $i = Image::find()->where(['IID' => $iid])->one();
+            if(empty($i))
+                return ['hasError' => true];
+
+            $i->FileTitle = $_POST['FileTitle'];
+            $i->FileDesc = $_POST['FileDesc'];
+            $ret = $i->update(['FileTitle', 'FileDesc']);
+            return ['hasError' => !$ret];
         }
 
 
